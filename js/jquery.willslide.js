@@ -20,9 +20,13 @@
 			willSlideSettings = $.extend({
 				width: 1500,
 				height: 500,
-				mode: "fit",//fit, expand
+				maxWidth:0
 			}, options);
 
+			if(willSlideSettings.maxWidth<willSlideSettings.width){
+				willSlideSettings.maxWidth=willSlideSettings.width;
+			}
+			
 			el.running=false;
 		    el.totalSlides=methods.countSlides(el)
 		    el.slidesOrder=[];
@@ -31,6 +35,7 @@
 		    el.windowW=$(window).width();
 		    el.windowH=$(window).height();
 		    el.scale=methods.scale(el);
+		    el.scaleMaxW=methods.scaleMaxW(el);
 
 			methods.hide(el);
 			methods.loadImages(el);
@@ -41,6 +46,7 @@
 				el.windowW=$(window).width();
 		    	el.windowH=$(window).height();
 				el.scale=methods.scale(el);
+				el.scaleMaxW=methods.scaleMaxW(el);
 				methods.resize(el);
 			});
 
@@ -80,11 +86,8 @@
 				$(this).addClass("slide"+(e+1));
         		el.slidesOrder.push(e+1);
         	});
-        	el.find("[willslidemode='fit']").each(function(){
-    			$(this).wrap("<div class='layer-wrapper'><div class='fit'></div></div>");
-    		});
-    		el.find("[willslidemode='expand']").each(function(){
-    			$(this).wrap("<div class='layer-wrapper'><div class='expand'></div></div>");
+        	el.find("[willslidelayer]").each(function(){
+    			$(this).wrap("<div class='layer-wrapper'><div class='layer'></div></div>");
     		});
         	methods.resize( el );
         },
@@ -94,70 +97,43 @@
         	return scale;
         },
 
+        scaleMaxW: function( el ){
+        	var scale = el.windowW/willSlideSettings.maxWidth;
+        	return scale;
+        },
+
         resize : function( el ){
-        	if(willSlideSettings.mode==="fit"){
-        		console.log(el.scale);
-        		if(el.scale>1){
-        			el.find(".fit").each(function(){
-						$(this).css({
-							width : willSlideSettings.width,
-							height : willSlideSettings.height, 
-						});
-					});
-					
-					el.find(".expand").each(function(){
-						$(this).css({
-							width : el.windowW,
-							height : willSlideSettings.height, 
-						});
-					});
-
+        	var slideMaxW = willSlideSettings.maxWidth;
+        	var slideW = willSlideSettings.width;
+        	if(slideMaxW > slideW){
+	        	if(el.windowW > slideMaxW){
 					el.css({
 						width : el.windowW,
-						height : willSlideSettings.height, 
-					});	
-        		}
-        		else{
-					el.find(".fit").each(function(){
-						$(this).css({
+						height : willSlideSettings.height*el.scaleMaxW, 
+					});
+				}
+				else {
+					if(el.windowW > slideW){
+						el.css({
 							width : el.windowW,
-							height : willSlideSettings.height*el.scale, 
+							height : willSlideSettings.height, 
 						});
-					});
-
-					el.find(".expand").each(function(){
-						$(this).css({
+					}
+					else{
+						el.css({
 							width : el.windowW,
-							height : willSlideSettings.height*el.scale, 
-						});
-					});
-
-					el.css({
-						width : el.windowW,
-						height : willSlideSettings.height*el.scale, 
-					});
+							height : willSlideSettings.height * el.scale, 
+						});	
+						console.log(el.scale);
+					}
 				}	
         	}
-        	else if(willSlideSettings.mode==="expand"){
-        		el.find(".fit").each(function(){
-					$(this).css({
-						width : el.windowW,
-						height : willSlideSettings.height*el.scale, 
-					});
-				});
-				el.find(".expand").each(function(){
-					$(this).css({
-						width : el.windowW,
-						height : willSlideSettings.height*el.scale, 
-					});
-				});
-
-				el.css({
+        	else{
+        		el.css({
 					width : el.windowW,
-					height : willSlideSettings.height*el.scale, 
-				});
+					height : willSlideSettings.height*el.scale,
+				});			
         	}
-        	
         },
 
         hide : function( el ) {//Hide all content of the slider

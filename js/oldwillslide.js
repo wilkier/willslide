@@ -134,6 +134,7 @@ Willslide.prototype = {
          TweenMax.set(that.name, {"opacity":1});
        }
     }
+    
     var images = $(that.name+' img');
     var counter = images.length; 
     images.each(function() {

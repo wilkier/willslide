@@ -8,11 +8,11 @@ html, body{
 
 #slider{
 	width:100%;
-	max-width: 1000px;
 	height: 500px;
 	background-color: red;
 	position: relative;
 	overflow: hidden;
+	background-color: black;
 
 	.slide{
 		position: absolute;
@@ -23,19 +23,20 @@ html, body{
 		overflow: hidden;
 
 		.layer-wrapper{
+			width:100%;
+			height: 100%;
 			top:0;
 			left: 0;
 			position: absolute;
 			opacity: 0.5;
 
-			.fit{
+			.layer{
+				width:100%;
+				height: 100%;
+				top:0;
+				left: 0;
 				position: relative;
 				background-color:green;
-			}
-
-			.expand{
-				position: relative;
-				background-color:orange;
 			}
 		}	
 	
