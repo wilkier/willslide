@@ -60,7 +60,8 @@
 		    function imageLoaded(){
 		       counter--; 
 		       if( counter === 0 ) {
-		       		el.show();	
+		       		el.show();
+		       		methods.coverImages( el );		       			
 		       }
 		    }
 
@@ -105,35 +106,77 @@
         resize : function( el ){
         	var slideMaxW = willSlideSettings.maxWidth;
         	var slideW = willSlideSettings.width;
+        	var slideH = willSlideSettings.height;
+        	el.css({width : el.windowW});
+
         	if(slideMaxW > slideW){
 	        	if(el.windowW > slideMaxW){
-					el.css({
-						width : el.windowW,
-						height : willSlideSettings.height*el.scaleMaxW, 
+					el.css({height : willSlideSettings.height*el.scaleMaxW});
+					el.find(".layer").each(function(){
+						$(this).css({
+							width : "100%",
+							height : "100%",
+							left : 0, 
+						});
 					});
 				}
 				else {
+					
+					
 					if(el.windowW > slideW){
-						el.css({
-							width : el.windowW,
-							height : willSlideSettings.height, 
+						var left = (el.windowW - slideMaxW)/2;
+						el.css({height : willSlideSettings.height});
+						el.find(".layer").each(function(){
+							$(this).css({
+								width : slideMaxW,
+								height : slideH,
+								left : left, 
+							});
 						});
 					}
 					else{
-						el.css({
-							width : el.windowW,
-							height : willSlideSettings.height * el.scale, 
+						var left = (el.windowW - slideMaxW * el.scale)/2;
+						el.css({height : willSlideSettings.height * el.scale});
+						el.find(".layer").each(function(){
+							$(this).css({
+								width : slideMaxW * el.scale,
+								height : slideH * el.scale,
+								left : left, 
+							});
+							console.log(left);
 						});	
-						console.log(el.scale);
 					}
 				}	
         	}
         	else{
-        		el.css({
-					width : el.windowW,
-					height : willSlideSettings.height*el.scale,
-				});			
+        		el.css({height : willSlideSettings.height * el.scale});			
         	}
+        },
+
+        coverImages : function( el ){
+        	el.find("img[willslidelayer='full']").each(function(){
+        		$(this).css({
+        			width : willSlideSettings.maxWidth,
+        			height : "auto",
+        			position : "absolute"
+        		});
+        		console.log($(this).width());
+
+        		var rel = 1/($(this).height() / willSlideSettings.height);
+        		var left = ($(this).width() * rel-$(this).width())/2;
+        		var leftPercent = left / $(this).width();
+        		console.log(leftPercent);
+        		if(rel > 1){
+        			$(this).css({
+	        			width : (rel*100)+"%",
+	        			left: -(leftPercent*100)+"%"
+	        		});
+        		}
+        		else{
+
+        		}
+        		
+        	});
         },
 
         hide : function( el ) {//Hide all content of the slider
