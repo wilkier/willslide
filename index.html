@@ -6,13 +6,19 @@
   <link href="css/willslide.css" rel="stylesheet" />
   <script src="js/jquery-1.12.4.min.js"></script>
   <script src="js/jquery-ui.min.js"></script>
-  <script src="js/jquery.willslide.min.js"></script>
+  <script src="js/jquery.willslide2.js"></script>
 
 </head>
 <body>
 	<div id="slider">
 		<div class="slide">
-			<img willslidelayer="full" src="http://www.wilkier.com/willslider/images/car.jpg">
+			<img willslidelayer="full" animate="100/0/1/0.7/Power4.easeOut" src="http://www.wilkier.com/willslider/images/car.jpg">
+			<!--<img willslidelayer src="http://www.wilkier.com/slide.gif">-->
+		</div>
+
+		<div class="slide">
+			<img willslidelayer="full" src="images/aviao.jpg">
+			<!--<img willslidelayer="full" src="http://www.wilkier.com/willslider/images/car.jpg">-->
 			<!--<img willslidelayer src="http://www.wilkier.com/slide.gif">-->
 		</div>
 
@@ -20,11 +26,13 @@
 			
 		</div>
 	</div>
+
 	<script>
 		$("#slider").willslide({
 			width:700,
 			height:500,
-			maxWidth:1000
+			maxWidth:1500,
+			time:4000
 		});
 	</script>
 </body>

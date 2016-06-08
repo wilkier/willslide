@@ -47,12 +47,29 @@
 		    	el.windowH=$(window).height();
 				el.scale=methods.scale(el);
 				el.scaleMaxW=methods.scaleMaxW(el);
-				methods.resize(el);
+				methods.callBackTimer(methods.resize,500,1,1);
 			});
 
 			return this;
 			
         },
+
+        callBackTimer:function(func,time,repeat,playBefore){
+			var counter=0;
+			if(repeat==null || repeat==0){
+				repeat=1;
+			}
+			if(playBefore){
+				func();
+			}
+			var loop = setInterval(function(){
+				func();
+				counter++;
+				if(counter>=repeat){
+					clearInterval(loop);
+				}
+			},time);
+		},
 
 
         loadImages: function( el ){//First load all images then show slider
@@ -153,32 +170,6 @@
         	}
         },
 
-        coverImages : function( el ){
-        	el.find("img[willslidelayer='full']").each(function(){
-        		$(this).css({
-        			width : willSlideSettings.maxWidth,
-        			height : "auto",
-        			position : "absolute"
-        		});
-        		console.log($(this).width());
-
-        		var rel = 1/($(this).height() / willSlideSettings.height);
-        		var left = ($(this).width() * rel-$(this).width())/2;
-        		var leftPercent = left / $(this).width();
-        		console.log(leftPercent);
-        		if(rel > 1){
-        			$(this).css({
-	        			width : (rel*100)+"%",
-	        			left: -(leftPercent*100)+"%"
-	        		});
-        		}
-        		else{
-
-        		}
-        		
-        	});
-        },
-
         hide : function( el ) {//Hide all content of the slider
         	el.hide();
         	console.log("hide");
@@ -193,4 +184,4 @@
         }
     };
 
-}(jQuery));
+})(jQuery);
