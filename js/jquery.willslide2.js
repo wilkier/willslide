@@ -71,7 +71,8 @@
              if( counter === 0 ) {
                 el.show();
                 methods.coverImages();
-                methods.slideTimer();          
+                methods.slideTimer();
+                methods.animate();         
              }
           }
 
@@ -109,6 +110,7 @@
                 if(el.isStopped){//if slide was stopped, puts slider to play again
                   el.stopSlider();  
                 }
+                methods.animate();//call slide animations
               }, 400);
             }
             else{
@@ -140,6 +142,7 @@
                 el.currentTime+=el.vars.refreshStep;
                 if(el.currentTime>el.vars.time){
                   el.currentTime=0;
+                  methods.autoSlide();
                 }
               }
             }, el.vars.refreshStep);
@@ -194,8 +197,9 @@
           });
           if(el.vars.showTimeBar){methods.createTimeBar();}
           if(el.vars.controls){methods.createControls();}
-          if(el.vars.nav){methods.createNav();} 
+          if(el.vars.nav){methods.createNav();}
 
+          methods.getAnimateVars();
           methods.resize();
         },
 
@@ -244,6 +248,68 @@
         scaleMaxW: function(){
           var scale = el.windowW/el.vars.maxWidth;
           return scale;
+        },
+
+        getAnimateVars: function(){
+          el.find("[animate]").each(function(){
+            var animatedElement=$(this);
+                dataString = animatedElement.attr("animate");//get attr animate value
+                dataString=dataString.replace(/ /g,"");//remove spaces
+                data = dataString.split(",");//separate the "," in an array
+                dtop = null;//create vars
+                dleft = null;
+                time = null;
+                delay = null;
+                ease = null;
+
+            data.forEach(function(value) {//new animation values
+              if(dtop == null){dtop = value.split("dtop:")[1]};
+              if(dleft == null){dleft = value.split("dleft:")[1]}; 
+              if(time == null){time = value.split("time:")[1]}; 
+              if(delay == null){delay = value.split("delay:")[1]}; 
+              if(ease == null){ease = value.split("ease:")[1]}; 
+            });
+
+            if(dtop == null){dtop=0};//if value is still null, apply default value
+            if(dleft == null){dleft=0}; 
+            if(time == null){time=0}; 
+            if(delay == null){delay=0}; 
+            if(ease == null){ease="linear"};
+
+            console.log(animatedElement);
+            animatedElement.parent(".layer").data({"dtop":dtop, "dleft":dleft, "time":time, "delay":delay, "ease":ease}).addClass("animated-layer to-load");
+          });
+        },
+
+        animate:function(){
+          
+          el.find(".animated-layer.to-load").each(function(){
+            var animatedElement=$(this);
+            animatedElement.css({
+              top:animatedElement.data("dtop")+"%", 
+              left:animatedElement.data("dleft")+"%"
+            });
+            animatedElement.removeClass("to-load");//after set the initial values, remove the class "to-load" to not set than again   
+          });
+
+          var current = el.find(".current");
+          current.find(".animated-layer").each(function(){
+            var animatedElement=$(this);
+            var time = parseInt(animatedElement.data("time"));
+            console.log("rodei");
+            console.log(animatedElement);
+            setTimeout(function(){
+              animatedElement.animate({
+                top:0, 
+                left:0
+              }, 
+              {
+                easing : animatedElement.data("ease"), 
+                duration : time
+              })
+            }, animatedElement.data("delay"));
+            animatedElement.addClass("to-load");
+          });
         },
 
         resize : function(){//when window is resized, calculates if should scale width and height of slider and each layer adjusting his left margin according with maxWidth var
