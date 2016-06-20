@@ -1,30 +1,52 @@
 <!DOCTYPE html>
-<html lang="pt-br" ng-app="store">
+<html>
 <head>
   <meta charset="utf-8">
+  <meta name="author" content="Wilkier Rockenmeyer">
+  <meta name="description" content="Willslider by Wilkier, simple responsive layer html slider ;]">
   <title>WillSlide</title>
   <link href="css/willslide.css" rel="stylesheet" />
   <script src="js/jquery-1.12.4.min.js"></script>
   <script src="js/jquery-ui.min.js"></script>
   <script src="js/jquery.willslide.min.js"></script>
 
+  <!--current exemple demonstration css-->
+  <style>
+  	.texto{width:700px;left:500px;top:160px;position:absolute}.texto h2{color:white;font-family:verdana;font-size:40px}.square{width:200px;height:200px;position:absolute;top:160px;left:300px;background-color:blue}.square.a{background-color:red;width:180px;height:180px;left:400px}.square.b{background-color:yellow;width:160px;height:160px;left:500px}.square.c{background-color:green;width:140px;height:140px;left:600px}.square.d{background-color:pink;width:120px;height:120px;left:700px}.los1{width:400px; margin-left:100px;}.los2{width:300px;margin-left: 1000px;}
+  </style>
+
 </head>
 <body>
 	<div id="slider">
 		<div class="slide">
-			<img willslidelayer="full" src="http://www.wilkier.com/willslider/images/car.jpg">
-			<!--<img willslidelayer src="http://www.wilkier.com/slide.gif">-->
+			<img willslidelayer="full" animate="dtop:100, dleft:0, time:800, ease:easeOutElastic" src="http://www.wilkier.com/willslide/images/nice-car.jpg">
+			<img willslidelayer class="los1" animate="dtop:100, dleft:0, time:800, delay:400, ease:easeOutElastic" src="http://www.wilkier.com/willslide/images/red.png">
+			<img willslidelayer class="los2" animate="dtop:-100, dleft:0, time:1200, delay:800, ease:easeOutElastic" src="http://www.wilkier.com/willslide/images/red.png">
 		</div>
 
 		<div class="slide">
-			
+			<img willslidelayer="full" animate="dtop:100, dleft:0, time:2000, ease:easeOutElastic" src="http://www.wilkier.com/willslide/images/nice-plane.jpg">
+			<div animate="dtop:-100, dleft:0, time:2000, delay:100, ease:easeOutElastic" class="texto">
+				<h2>Hi, this is a text demonstration!</h2>
+			</div>
 		</div>
+
+		<div class="slide">
+			<div animate="dtop:0, dleft:-100, time:2000, delay:100, ease:easeOutElastic" class="square d"></div>
+			<div animate="dtop:0, dleft:-100, time:2000, delay:200,ease:easeOutElastic" class="square c"></div>
+			<div animate="dtop:0, dleft:-100, time:2000, delay:300,ease:easeOutElastic" class="square b"></div>
+			<div animate="dtop:0, dleft:-100, time:2000, delay:400,ease:easeOutElastic" class="square a"></div>
+			<div animate="dtop:0, dleft:-100, time:2000, ease:easeOutElastic" class="square"></div>
+		</div>
+
 	</div>
+
 	<script>
 		$("#slider").willslide({
 			width:700,
 			height:500,
-			maxWidth:1000
+			maxWidth:1500,
+			time:4000,
 		});
 	</script>
 </body>
