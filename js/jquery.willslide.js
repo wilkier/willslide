@@ -315,8 +315,8 @@
 
             var transform = "translate("+dleft+"%, "+dtop+"%)";
             animatedElement.stop().css({
-              "font-size": animatedElement.data("dleft")+"px",//font-size is used just like a fake atribute to animate, fake css tributes like "dleft" may be not interpreted by browser, and animate not works
-              "line-height": animatedElement.data("dtop")+"px",//line-height is used just like a fake atribute to animate, fake css tributes like "dleft" may be not interpreted by browser, and animate not works
+              "padding-left": animatedElement.data("dleft")+"px",//padding-left is used just like a fake atribute to animate, fake css tributes like "dleft" may be not interpreted by browser, and animate not works
+              "padding-top": animatedElement.data("dtop")+"px",//padding-top is used just like a fake atribute to animate, fake css tributes like "dleft" may be not interpreted by browser, and animate not works
             });
             methods.transform(animatedElement,transform);
             animatedElement.removeClass("to-load");//after set the initial values, remove the class "to-load" to not set than again   
@@ -331,20 +331,21 @@
             setTimeout(function(){//set delayed call
               if(current.hasClass("current")){//verify again if still has class current
                 animatedElement.animate({
-                  "font-size": 0,//font-size is used just like a fake atribute to animate, fake css tributes like "dleft" may be not interpreted by browser, and animate not works
-                  "line-height": 0,//line-height is used just like a fake atribute to animate, fake css tributes like "dleft" may be not interpreted by browser, and animate not works
+                  "padding-left": 0,//padding-left is used just like a fake atribute to animate, fake css tributes like "dleft" may be not interpreted by browser, and animate not works
+                  "padding-top": 0,//padding-top is used just like a fake atribute to animate, fake css tributes like "dleft" may be not interpreted by browser, and animate not works
                 }, 
                 {
                   easing : animatedElement.data("ease"),//set ease data value
                   duration : time,
                   complete : function(){el.vars.after()},//Calls "after" callback function
-                  step: function(now,fx) {//jquery animate is not good to transform, we used steps with fake atributes, in this case font-size and line-height
-                    if (fx.prop === "fontSize") {//is the fontSize call back, so store the value in a var
+                  step: function(now,fx) {//jquery animate is not good to transform, we used steps with fake atributes, in this case padding-left and padding-top
+                    if (fx.prop === "paddingLeft") {//is the paddingLeft call back, so store the value in a var
                       offX = now*animatedElement.data("dleftreverse");
                     } 
-                    else if (fx.prop === "lineHeight") {//is the lineHeight call back, do the transforms with offx and current "now" value
+                    else if (fx.prop === "paddingTop") {//is the paddingTop call back, do the transforms with offx and current "now" value
                       var offY = now*animatedElement.data("dtopreverse");
                       var transform = "translate("+offX+"%,"+offY+"%)";
+                      console.log(transform);
                       methods.transform($(this),transform); 
                     }
                   },
