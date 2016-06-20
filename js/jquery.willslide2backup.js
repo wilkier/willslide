@@ -89,7 +89,6 @@
         },
 
         slideTo : function(nextSlide){
-          console.log(el.isAnimating);
           if(!el.isAnimating){
             if(el.currentSlide!=nextSlide){
               el.currentSlide=nextSlide;
@@ -102,7 +101,7 @@
               $(".bullet.current-bullet").removeClass("current-bullet");//Refresh  the current bullet
               $(".bullet"+nextSlide).addClass("current-bullet");
               
-              exitingSlide.animate({opacity:0},100);
+              exitingSlide.animate({opacity:0},300);
               el.currentTime=0;
               setTimeout(function(){
                 exitingSlide.removeClass("goodbye");
@@ -112,7 +111,7 @@
                   el.stopSlider();  
                 }
                 methods.animate();//call slide animations
-              }, 200);
+              }, 400);
             }
             else{
               console.log("Can't slide to the current slide");
@@ -193,18 +192,9 @@
             $(this).data("slideOrder",(e+1));//add the sequence number inside slideOrder data atribute
           });
 
-          el.find(".slide").each(function(){
-            $(this).children("div").each(function(){
-              $(this).wrap("<div class='layer-wrapper'><div class='layer'></div></div>");
-              $(this).parent(".layer").css({width:el.vars.maxWidth, height:el.vars.height});
-            });
-          });
-
           el.find("[willslidelayer]").each(function(){
             $(this).wrap("<div class='layer-wrapper'><div class='layer'></div></div>");
-            $(this).parent(".layer").css({width:el.vars.maxWidth, height:el.vars.height});
           });
-          
           if(el.vars.showTimeBar){methods.createTimeBar();}
           if(el.vars.controls){methods.createControls();}
           if(el.vars.nav){methods.createNav();}
@@ -295,14 +285,9 @@
           
           el.find(".animated-layer.to-load").each(function(){
             var animatedElement=$(this);
-            var transform = "translate("+animatedElement.data("dleft")+"%, "+animatedElement.data("dtop")+"%)";
-            animatedElement.stop().css({
-              "font-size": animatedElement.data("dleft")+"px",
-              "line-height": animatedElement.data("dtop")+"px",
-              "-ms-transform": transform,
-              "-webkit-transform": transform,
-              "-moz-transform": transform,
-              "transform": transform,
+            animatedElement.css({
+              top:animatedElement.data("dtop")+"%", 
+              left:animatedElement.data("dleft")+"%"
             });
             animatedElement.removeClass("to-load");//after set the initial values, remove the class "to-load" to not set than again   
           });
@@ -311,52 +296,19 @@
           current.find(".animated-layer").each(function(){
             var animatedElement=$(this);
             var time = parseInt(animatedElement.data("time"));
-            var offX=0;
+            console.log("rodei");
+            console.log(animatedElement);
             setTimeout(function(){
-              if(current.hasClass("current")){
-                animatedElement.animate({
-                  "font-size": 0,
-                  "line-height": 0,
-                }, 
-                {
-                  easing : animatedElement.data("ease"), 
-                  duration : time,
-                  step: function(now,fx) {
-                    if (fx.prop === "fontSize") {
-                      offX = now;
-                    } 
-                    else if (fx.prop === "lineHeight") {
-                      var transform = "translate("+offX+"%,"+now+"%)";
-                      $(this).css({
-                        "-ms-transform": transform,
-                        "-webkit-transform": transform,
-                        "-moz-transform": transform,
-                        "transform": transform,
-                      }); 
-                    }
-                  },
-                })
-              }
+              animatedElement.animate({
+                top:0, 
+                left:0
+              }, 
+              {
+                easing : animatedElement.data("ease"), 
+                duration : time
+              })
             }, animatedElement.data("delay"));
-
             animatedElement.addClass("to-load");
-          });
-        },
-
-        translateAnimate : function(){
-
-        },
-
-        transform : function(elem, transform){
-          elem.css({
-            "-ms-transform": transform,
-            "-webkit-transform": transform,
-            "-moz-transform": transform,
-            "transform": transform,
-            "-ms-transform-origin": "left top",
-            "-webkit-transform-origin": "left top",
-            "-moz-transform-origin": "left top",
-            "transform-origin": "left top",
           });
         },
 
@@ -366,44 +318,46 @@
           var slideH = el.vars.height;
           el.css({width : el.windowW});
 
-          if(slideMaxW > slideW){// Verify if only adjust margin left, if yes
-            if(el.windowW > slideMaxW){//if window width is bigger than slider,  apply scale and adjust top
-              var left = (el.windowW - slideMaxW)/2;
-              el.css({height : el.vars.height*el.scaleMaxW});//adjust slider main div height
-              el.find(".layer-wrapper").each(function(){
-                methods.transform($(this), "scale("+el.scaleMaxW+")");
-                $(this).css("left",0);
+          if(slideMaxW > slideW){// Verify if only scale width, if yes
+            if(el.windowW > slideMaxW){
+              el.css({height : el.vars.height*el.scaleMaxW});
+              el.find(".layer").each(function(){
+                $(this).css({
+                  width : "100%",
+                  height : "100%",
+                  left : 0, 
+                });
               });
             }
             else {
                       
               if(el.windowW > slideW){
-                el.css({height : el.vars.height});
                 var left = (el.windowW - slideMaxW)/2;
-                var scale = 1;
-                el.find(".layer-wrapper").each(function(){
-                  methods.transform($(this), "scale("+scale+") translate("+left+"px, 0px)");
-                  $(this).css("left",0);
+                el.css({height : el.vars.height});
+                el.find(".layer").each(function(){
+                  $(this).css({
+                    width : slideMaxW,
+                    height : slideH,
+                    left : left, 
+                  });
                 });
               }
               else{
-                el.css({height : el.vars.height*el.scale});//adjust slider main div height
-                var left = (el.windowW - slideMaxW*el.scale)/2;
-                el.find(".layer-wrapper").each(function(){
-                  methods.transform($(this), "scale("+el.scale+")");
-                  $(this).css("left",left);
-                });
+                var left = (el.windowW - slideMaxW * el.scale)/2;
+                el.css({height : el.vars.height * el.scale});
+                el.find(".layer").each(function(){
+                  $(this).css({
+                    width : slideMaxW * el.scale,
+                    height : slideH * el.scale,
+                    left : left, 
+                  });
+                }); 
               }
             } 
           }
           else{
-            el.css({height : el.vars.height * el.scale});
-            el.find(".layer-wrapper").each(function(){
-              methods.transform($(this), "scale("+el.scaleMaxW+")");
-            });
+            el.css({height : el.vars.height * el.scale});     
           }
-
-          el.find("[will]").css('background',"red");
         },
 
         coverImages : function(){//find images with [willslide='full'] attr and makes them cover all slide area
