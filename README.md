@@ -250,7 +250,7 @@ If i want img appear by slide left area:
 32. easeInOutBounce
 
 **See them here:**
-https://jqueryui.com/easing/
+https://api.jqueryui.com/resources/easing-graph.html
 
 
 **Final animation example:**
