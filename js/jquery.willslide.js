@@ -34,6 +34,7 @@
           methods.build(el);
           methods.loadImages(el);
 
+
           $(window).resize(function(){
             el.windowW=$(window).width();
             el.windowH=$(window).height();
